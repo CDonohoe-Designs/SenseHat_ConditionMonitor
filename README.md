@@ -67,4 +67,18 @@ scripts/              # Service install helper
 ```
 
 ---
+
+## ✅ Current Status (v0.1.0)
+- MVP working on Raspberry Pi 3 (Bookworm) with Sense HAT (I²C enabled).
+- MQTT JSON publish every ~2s.
+- Modbus-TCP holding registers 40001–40006 on port **5020**.
+- LED: green = normal, amber = temp > threshold.
+
+## Verify
+```bash
+# MQTT stream
+mosquitto_sub -t 'spBv1.0/sensehat/DDATA/pi-edge' -v
+
+# Optional: Modbus test (expects 6 registers)
+python3 -c 'from pymodbus.client import ModbusTcpClient as C;c=C("127.0.0.1",port=5020);r=c.read_holding_registers(0,6);print(getattr(r,"registers",r));c.close()'
 Made for interview alignment with Schneider Electric’s IoT Project Engineer remit.
