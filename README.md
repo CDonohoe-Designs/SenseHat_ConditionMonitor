@@ -1,4 +1,4 @@
-# Schneider SenseHAT Condition Monitor (EcoStruxure‑friendly)
+#SenseHAT Condition Monitor (EcoStruxure‑friendly)
 
 **Objective:** A small but professional Raspberry Pi + Sense HAT edge agent that publishes sensor data (Temp/Humidity/Pressure/IMU) over MQTT and exposes a Modbus‑TCP server so BMS/SCADA/EcoStruxure can poll values. Includes commissioning docs, Node‑RED dashboard stub, and service script.
 
