@@ -47,7 +47,7 @@ systemctl --no-pager --full status pi-sense-agent
 
 ### Command (curl)
 ```bash
-curl -s http://<pi-ip>:8080/health | python3 -m json.tool
+curl -s http://192.168.1.49:8080/health | python3 -m json.tool
 ```
 
 ### Screenshots (save as)
