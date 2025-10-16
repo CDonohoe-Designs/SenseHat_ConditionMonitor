@@ -81,4 +81,20 @@ mosquitto_sub -t 'spBv1.0/sensehat/DDATA/pi-edge' -v
 
 # Optional: Modbus test (expects 6 registers)
 python3 -c 'from pymodbus.client import ModbusTcpClient as C;c=C("127.0.0.1",port=5020);r=c.read_holding_registers(0,6);print(getattr(r,"registers",r));c.close()'
-Made for interview alignment with Schneider Electric’s IoT Project Engineer remit.
+
+
+## Health endpoint
+
+The edge agent exposes a lightweight health page for commissioning.
+
+- **URL (default):** `http://<pi-ip>:8080/health`
+- **Shows:** `ok`, `uptime_s`, `last_publish`, `topic`, `broker`, `tls`
+- **Use cases:** fast site checks, service monitoring, smoke tests
+
+### Example
+```bash
+# On the Pi
+curl http://127.0.0.1:8080/health
+
+# From your laptop (replace with the Pi's IP)
+curl http://192.168.1.49:8080/health
