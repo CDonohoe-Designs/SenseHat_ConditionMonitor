@@ -25,7 +25,7 @@ echo "Broker -> $MQTT_HOST:$MQTT_PORT"
 ```
 
 ### Screenshot (save as)
-**docs/images/00_prep_ip_broker.png**  
+**docs/images/00_prep_ip_broker.PNG**  
 ![0 — Prep (IP & Broker)](docs/images/00_prep_ip_broker.png)
 
 ---
