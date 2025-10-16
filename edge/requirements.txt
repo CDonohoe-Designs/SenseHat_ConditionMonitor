@@ -1,0 +1,4 @@
+sense-hat
+paho-mqtt
+pymodbus>=3.4
+Flask
