@@ -1,14 +1,17 @@
 [Unit]
-Description=SenseHAT Edge Agent
+Description=SenseHAT MQTT Edge Agent
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-User=pi
-WorkingDirectory=/opt/pi-sense-agent
-ExecStart=/usr/bin/python3 /opt/pi-sense-agent/agent.py --config /etc/pi-sense-agent/config.yaml
+Type=simple
+WorkingDirectory=/home/rpicd/SenseHat_ConditionMonitor
+Environment=MQTT_HOST=192.168.1.10
+Environment=MQTT_PORT=1883
+Environment=MQTT_TLS=0
+ExecStart=/home/rpicd/SenseHat_ConditionMonitor/edge/.venv/bin/python /home/rpicd/SenseHat_ConditionMonitor/edge/agent.py
 Restart=on-failure
-RestartSec=3
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

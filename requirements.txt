@@ -1,0 +1,5 @@
+sense-hat
+paho-mqtt
+Flask
+psutil
+PyYAML

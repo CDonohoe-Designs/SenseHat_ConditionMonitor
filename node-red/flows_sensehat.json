@@ -1,9 +1,535 @@
 [
-  {
-    "id": "sensehat-flow",
-    "type": "tab",
-    "label": "SenseHAT Dashboard",
-    "disabled": false,
-    "info": "Import this flow and adapt MQTT broker credentials under Node-RED settings."
-  }
+    {
+        "id": "b8ca6523fe585f52",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "tab1",
+        "type": "ui_tab",
+        "name": "SenseHAT",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "grp_env",
+        "type": "ui_group",
+        "name": "Environment",
+        "tab": "tab1",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "broker1",
+        "type": "mqtt-broker",
+        "name": "LocalBroker",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "tls": "",
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true
+    },
+    {
+        "id": "04afc22b463938e3",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "f89810e97ff92dd2",
+        "type": "mqtt in",
+        "z": "b8ca6523fe585f52",
+        "name": "SenseHAT JSON",
+        "topic": "spBv1.0/sensehat/DDATA/pi-edge",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "broker1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 580,
+        "wires": [
+            [
+                "7bf7e39747a4c923",
+                "9b444b3e34cc720e"
+            ]
+        ]
+    },
+    {
+        "id": "7bf7e39747a4c923",
+        "type": "json",
+        "z": "b8ca6523fe585f52",
+        "name": "parse JSON",
+        "x": 470,
+        "y": 580,
+        "wires": [
+            [
+                "2dcc0ca7f3d38821",
+                "9ab24ab9d841cb6d"
+            ]
+        ]
+    },
+    {
+        "id": "2dcc0ca7f3d38821",
+        "type": "function",
+        "z": "b8ca6523fe585f52",
+        "name": "metrics→individual",
+        "func": "// Input: { ts, metrics:{temp_c, hum_pct, press_hpa, ax, ay, az} }\nconst p = msg.payload || {};\nconst m = p.metrics || {};\n\nfunction out(topic, value) {\n  if (value === null || value === undefined) return null;\n  return { topic, payload: Number(value), timestamp: p.ts || Date.now() };\n}\n\nconst msgs = [\n  out('temp_c', m.temp_c),\n  out('hum_pct', m.hum_pct),\n  out('press_hpa', m.press_hpa)\n];\n\nif (typeof m.ax === 'number' && typeof m.ay === 'number' && typeof m.az === 'number') {\n  const mag = Math.sqrt(m.ax * m.ax + m.ay * m.ay + m.az * m.az);\n  msgs.push(out('accel_mag_g', +mag.toFixed(3)));\n}\n\nreturn [msgs.filter(Boolean)];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 580,
+        "wires": [
+            [
+                "cc1e945b94abaec7",
+                "1209f315cffb04ec",
+                "eaa98cc2ed45196b",
+                "996e08034416f19b",
+                "830e3d7a7951bd0d"
+            ]
+        ]
+    },
+    {
+        "id": "830e3d7a7951bd0d",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "metrics",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "cc1e945b94abaec7",
+        "type": "switch",
+        "z": "b8ca6523fe585f52",
+        "name": "is temp",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "temp_c",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 900,
+        "y": 520,
+        "wires": [
+            [
+                "18487f1f3e561db6",
+                "ab51da1986cbdc6c",
+                "c82ec4e0d379f37e",
+                "0cdea2d7cdf2ac30"
+            ]
+        ]
+    },
+    {
+        "id": "1209f315cffb04ec",
+        "type": "switch",
+        "z": "b8ca6523fe585f52",
+        "name": "is hum",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "hum_pct",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 900,
+        "y": 560,
+        "wires": [
+            [
+                "33c6c85a2c31e032",
+                "228737078d8ae096"
+            ]
+        ]
+    },
+    {
+        "id": "eaa98cc2ed45196b",
+        "type": "switch",
+        "z": "b8ca6523fe585f52",
+        "name": "is press",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "press_hpa",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 900,
+        "y": 600,
+        "wires": [
+            [
+                "5418466232b6365c",
+                "689facbce3906d1f"
+            ]
+        ]
+    },
+    {
+        "id": "996e08034416f19b",
+        "type": "switch",
+        "z": "b8ca6523fe585f52",
+        "name": "is |a|",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "accel_mag_g",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 900,
+        "y": 680,
+        "wires": [
+            [
+                "9dccbc4a9f762223"
+            ]
+        ]
+    },
+    {
+        "id": "18487f1f3e561db6",
+        "type": "ui_gauge",
+        "z": "b8ca6523fe585f52",
+        "name": "Temp (°C)",
+        "group": "grp_env",
+        "order": 1,
+        "width": 6,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Temp (°C)",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 80,
+        "x": 1100,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "33c6c85a2c31e032",
+        "type": "ui_gauge",
+        "z": "b8ca6523fe585f52",
+        "name": "Humidity (%)",
+        "group": "grp_env",
+        "order": 2,
+        "width": 6,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Humidity (%)",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "x": 1110,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5418466232b6365c",
+        "type": "ui_gauge",
+        "z": "b8ca6523fe585f52",
+        "name": "Pressure (hPa)",
+        "group": "grp_env",
+        "order": 3,
+        "width": 6,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Pressure (hPa)",
+        "label": "hPa",
+        "format": "{{value}}",
+        "min": 800,
+        "max": 1100,
+        "x": 1120,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ab51da1986cbdc6c",
+        "type": "ui_chart",
+        "z": "b8ca6523fe585f52",
+        "name": "Temp history",
+        "group": "grp_env",
+        "order": 4,
+        "width": 6,
+        "height": 4,
+        "label": "Temp (°C)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "10",
+        "ymax": "40",
+        "removeOlder": 3600,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": "",
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1140,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9b444b3e34cc720e",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "9ab24ab9d841cb6d",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "Complete msg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "c82ec4e0d379f37e",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "debug temp",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "228737078d8ae096",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "debug hum",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "689facbce3906d1f",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "debug press",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9dccbc4a9f762223",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "debug accel",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "0cdea2d7cdf2ac30",
+        "type": "debug",
+        "z": "b8ca6523fe585f52",
+        "name": "debug temp history",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1150,
+        "y": 580,
+        "wires": []
+    }
 ]

@@ -1,9 +1,24 @@
+# Python
 __pycache__/
 *.pyc
+
+# Env / secrets
 .env
-venv/
-node_modules/
+*.env
+
+# Virtual envs
+.venv/
+edge/.venv/
+
+# Logs
 *.log
-# Node-RED settings
+
+# Node-RED (safe to ignore)
 *.backup
 *.bak
+# Node-RED runtime if used locally (protect credentials)
+node-red-data/node-red/flows_*_cred.json
+
+# OS / editors
+.DS_Store
+*.swp
