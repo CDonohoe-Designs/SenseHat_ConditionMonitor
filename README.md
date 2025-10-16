@@ -1,4 +1,4 @@
-# Schneider SenseHAT Condition Monitor (EcoStruxure‑friendly)
+#SenseHAT Condition Monitor (EcoStruxure‑friendly)
 
 **Objective:** A small but professional Raspberry Pi + Sense HAT edge agent that publishes sensor data (Temp/Humidity/Pressure/IMU) over MQTT and exposes a Modbus‑TCP server so BMS/SCADA/EcoStruxure can poll values. Includes commissioning docs, Node‑RED dashboard stub, and service script.
 
@@ -67,4 +67,34 @@ scripts/              # Service install helper
 ```
 
 ---
-Made for interview alignment with Schneider Electric’s IoT Project Engineer remit.
+
+## ✅ Current Status (v0.1.0)
+- MVP working on Raspberry Pi 3 (Bookworm) with Sense HAT (I²C enabled).
+- MQTT JSON publish every ~2s.
+- Modbus-TCP holding registers 40001–40006 on port **5020**.
+- LED: green = normal, amber = temp > threshold.
+
+## Verify
+```bash
+# MQTT stream
+mosquitto_sub -t 'spBv1.0/sensehat/DDATA/pi-edge' -v
+
+# Optional: Modbus test (expects 6 registers)
+python3 -c 'from pymodbus.client import ModbusTcpClient as C;c=C("127.0.0.1",port=5020);r=c.read_holding_registers(0,6);print(getattr(r,"registers",r));c.close()'
+
+
+## Health endpoint
+
+The edge agent exposes a lightweight health page for commissioning.
+
+- **URL (default):** `http://<pi-ip>:8080/health`
+- **Shows:** `ok`, `uptime_s`, `last_publish`, `topic`, `broker`, `tls`
+- **Use cases:** fast site checks, service monitoring, smoke tests
+
+### Example
+```bash
+# On the Pi
+curl http://127.0.0.1:8080/health
+
+# From your laptop (replace with the Pi's IP)
+curl http://192.168.1.49:8080/health
