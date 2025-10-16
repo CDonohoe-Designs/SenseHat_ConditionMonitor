@@ -13,10 +13,11 @@ edge/.venv/
 # Logs
 *.log
 
-# Node-RED (safe to ignore)
+# Node / Node-RED
+node_modules/
 *.backup
 *.bak
-# Node-RED runtime if used locally (protect credentials)
+# Protect local Node-RED credential files if you run Node-RED in-tree
 node-red-data/node-red/flows_*_cred.json
 
 # OS / editors
