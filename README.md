@@ -1,100 +1,86 @@
-#SenseHAT Condition Monitor (EcoStruxure‑friendly)
+# SenseHAT Condition Monitor (Raspberry Pi)
 
-**Objective:** A small but professional Raspberry Pi + Sense HAT edge agent that publishes sensor data (Temp/Humidity/Pressure/IMU) over MQTT and exposes a Modbus‑TCP server so BMS/SCADA/EcoStruxure can poll values. Includes commissioning docs, Node‑RED dashboard stub, and service script.
+**Owner:** Caoilte Donohoe  
+**Generated:** 2025-10-16
 
-## Features
-- MQTT publisher (QoS1, retain) — Sparkplug‑style topic by default.
-- Modbus‑TCP server with a simple holding‑register map.
-- LED matrix status (green/amber/red), joystick to acknowledge alarms (todo).
-- Store‑and‑forward ready (SQLite placeholder), /health API (todo).
-- Clean repo for portfolio use.
+A small Raspberry Pi + Sense HAT node that publishes room conditions and device health, shows a simple dashboard, and can feed other systems.
 
-## Quick start (edge MQTT publisher)
+## Project Overview
+Raspberry Pi + Sense HAT edge agent publishing metrics (**Temp, Humidity, Pressure, 3-axis accel**) to MQTT and exposing a `/health` endpoint. Node-RED dashboard provides live gauges and a temperature trend chart.
+
+## Current Status (v0.2.0)
+- Agent runs as systemd service: `pi-sense-agent`
+- MQTT topic: `spBv1.0/sensehat/DDATA/pi-edge` (**QoS1, retained**)
+- Health endpoint: `http://<pi-ip>:8080/health`
+- Node-RED dashboard: `http://<pi-ip>:1880/ui`
+- Modbus-TCP server (optional): **port 5020**
+
+## Run / Verify (quick)
 ```bash
-cd edge
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-# set your broker; use 1883 for plain or 8883 with TLS
-export MQTT_HOST=192.168.1.10
-export MQTT_PORT=1883
-export MQTT_TLS=0   # set 1 to enable TLS
-python agent.py
-```
-
-**Payload example:**
-```json
-{
-  "ts": 1739599999123,
-  "metrics": {"temp_c": 27.4, "hum_pct": 44.9, "press_hpa": 1006.2, "ax": -0.01, "ay": 0.00, "az": 0.98}
-}
-```
-
-## Run Modbus‑TCP server
-```bash
-cd edge && source .venv/bin/activate
-pip install -r requirements.txt
-python modbus_server.py  # listens on 0.0.0.0:5020 (non‑privileged)
-```
-Poll holding registers from any Modbus client at port **5020**.
-
-## Register map (short)
-| Address | Name        | Units  | Scale | Notes |
-|--------:|-------------|--------|------:|-------|
-| 40001   | temp_c      | °C     | ×100  | int16 |
-| 40002   | hum_pct     | %RH    | ×100  | int16 |
-| 40003   | press_hpa   | hPa    | ×1    | int16 (truncate) |
-| 40004   | ax          | g      | ×1000 | int16 |
-| 40005   | ay          | g      | ×1000 | int16 |
-| 40006   | az          | g      | ×1000 | int16 |
-
-Full details: `commissioning/register_map_modbus.md`
-
-## Autostart as a service (agent)
-```bash
-cd scripts
-sudo ./install_service.sh
-sudo systemctl enable --now pi-sense-agent.service
-journalctl -u pi-sense-agent -f
-```
-
-## Repo layout
-```
-edge/                 # Python edge agent + servers
-commissioning/        # Register map, network plan, test checklist
-dashboards/node-red/  # Example Node‑RED flow (importable JSON)
-docs/                 # Diagrams & PDFs for your portfolio
-scripts/              # Service install helper
-```
-
----
-
-## ✅ Current Status (v0.1.0)
-- MVP working on Raspberry Pi 3 (Bookworm) with Sense HAT (I²C enabled).
-- MQTT JSON publish every ~2s.
-- Modbus-TCP holding registers 40001–40006 on port **5020**.
-- LED: green = normal, amber = temp > threshold.
-
-## Verify
-```bash
-# MQTT stream
 mosquitto_sub -t 'spBv1.0/sensehat/DDATA/pi-edge' -v
+curl http://<pi-ip>:8080/health
+# then open the dashboard
+# http://<pi-ip>:1880/ui
+```
 
-# Optional: Modbus test (expects 6 registers)
-python3 -c 'from pymodbus.client import ModbusTcpClient as C;c=C("127.0.0.1",port=5020);r=c.read_holding_registers(0,6);print(getattr(r,"registers",r));c.close()'
+## System Architecture
+Sensors → Pi agent → MQTT → Dashboard/other systems.  
+Simple `/health` page for quick checks.  
+Optional: Modbus‑TCP view for building systems (same readings).
 
+![Architecture placeholder](docs/images/SenseHAT_Architecture.png)
 
-## Health endpoint
+## Implementation (lite)
+- **Edge Agent:** auto-starts, restarts on failure; reads temp/humidity/pressure/3-axis accel + device health.
+- **MQTT:** Sparkplug-style topics, QoS1 + retained for reliable last-value display.
+- **HTTP & Dashboard:** `/health` shows "OK" + uptime; Node-RED `/ui` shows live gauges + temperature trend.
+- **Modbus-TCP (optional):** small register map for BMS/SCADA (port 5020).
 
-The edge agent exposes a lightweight health page for commissioning.
+## Register Map (Modbus‑TCP)
+| Register | Signal            | Units  | Notes           |
+|--------:|--------------------|--------|-----------------|
+|   30001 | env.temp_c         | 0.1 °C | Temperature ×10 |
+|   30002 | env.humidity_pct   | 0.1 %  | Humidity ×10    |
+|   30003 | env.pressure_hpa   | 0.1 hPa| Pressure ×10    |
+|   30010 | sys.cpu_temp_c     | 0.1 °C | CPU temp ×10    |
+|   30020 | sys.uptime_s_low   | s      | Low word        |
+|   30021 | sys.uptime_s_high  | s      | High word       |
 
-- **URL (default):** `http://<pi-ip>:8080/health`
-- **Shows:** `ok`, `uptime_s`, `last_publish`, `topic`, `broker`, `tls`
-- **Use cases:** fast site checks, service monitoring, smoke tests
+## Notes / Quirks
+- Sense HAT temperature can read slightly high from CPU heat; a simple compensation is used.
+- Pressure may briefly return 0 on first reads; agent guards against bogus values.
 
-### Example
-```bash
-# On the Pi
-curl http://127.0.0.1:8080/health
+## Next (as needed)
+- Store-and-forward buffer (SQLite) for offline periods.
+- Service unit for Modbus‑TCP server.
+- TLS + credentials for MQTT in production.
 
-# From your laptop (replace with the Pi's IP)
-curl http://192.168.1.49:8080/health
+## Quick Install (outline)
+1. **Clone or copy** this repo onto the Pi.
+2. Copy `config/config.example.yaml` to `/etc/pi-sense-agent/config.yaml` and edit the MQTT/server details.
+3. Copy `deploy/pi-sense-agent.service` to `/etc/systemd/system/` and enable:
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now pi-sense-agent
+   sudo systemctl status pi-sense-agent
+   ```
+4. Import the Node-RED flow from `node-red/flows_sensehat.json` (Menu → Import) and open `/ui`.
+
+## Repo Structure
+```
+SenseHAT-Edge/
+├─ agent/                 # (your Python agent here)
+├─ config/
+│  └─ config.example.yaml
+├─ deploy/
+│  └─ pi-sense-agent.service
+├─ docs/
+│  └─ images/
+│     └─ SenseHAT_Architecture.png (placeholder)
+├─ node-red/
+│  └─ flows_sensehat.json
+└─ README.md
+```
+
+## License
+MIT — see [LICENSE](LICENSE).

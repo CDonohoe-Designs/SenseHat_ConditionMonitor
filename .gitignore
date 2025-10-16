@@ -1,28 +1,9 @@
-# Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-env/
+.env
 venv/
-.venv/
-build/
-dist/
-.eggs/
-*.egg-info/
-
-# VSCode / PyCharm
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-logs/
+node_modules/
 *.log
-
-# Node-RED runtime if used locally
-node-red-data/
+# Node-RED settings
+*.backup
+*.bak

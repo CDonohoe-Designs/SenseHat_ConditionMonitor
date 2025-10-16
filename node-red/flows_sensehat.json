@@ -1,0 +1,9 @@
+[
+  {
+    "id": "sensehat-flow",
+    "type": "tab",
+    "label": "SenseHAT Dashboard",
+    "disabled": false,
+    "info": "Import this flow and adapt MQTT broker credentials under Node-RED settings."
+  }
+]
