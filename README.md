@@ -81,6 +81,10 @@ SenseHAT-Edge/
 │  └─ flows_sensehat.json
 └─ README.md
 ```
-
+## TL;DR — One-Command Install on the Pi
+```bash
+# from the repo root on the Pi
+chmod +x deploy/scripts/install.sh
+deploy/scripts/install.sh
 ## License
 MIT — see [LICENSE](LICENSE).
