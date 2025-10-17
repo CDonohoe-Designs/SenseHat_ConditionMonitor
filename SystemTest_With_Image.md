@@ -127,28 +127,7 @@ systemctl is-active pi-sense-agent && echo "Agent started on boot ✅"
 
 ---
 
-## 7) Common Fixes — Quick Triage
-
-### Commands (pick what applies)
-```bash
-journalctl -u pi-sense-agent -n 50 --no-pager
-sudo nano /etc/pi-sense-agent/agent.env
-systemctl status nodered --no-pager
-```
-
-### Screenshots (save as)
-**docs/images/07a_journal_logs.png**  
-![7a — Agent Logs](docs/images/07a_journal_logs.png)
-
-**docs/images/07b_agent_env.png**  
-![7b — Env File](docs/images/07b_agent_env.png)
-
-**docs/images/07c_nodered_status.png**  
-![7c — Node-RED Running](docs/images/07c_nodered_status.png)
-
----
-
-## 8) QoS1 + Retained — Show the Difference
+## 7) QoS1 + Retained — Show the Difference
 
 ### Commands
 ```bash
