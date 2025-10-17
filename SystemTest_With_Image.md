@@ -105,13 +105,13 @@ http://<pi-ip>:1880/ui
 ```bash
 # Auto-restart on crash?
 sudo pkill -f 'edge/agent.py' ; sleep 4
-systemctl is-active pi-sense-agent && echo "Agent auto-restarted ✅"
+systemctl is-active pi-sense-agent && echo "Agent auto-restarted "
 journalctl -u pi-sense-agent -n 15 --no-pager
 
 # Survives reboot?
 sudo reboot
 # after login:
-systemctl is-active pi-sense-agent && echo "Agent started on boot ✅"
+systemctl is-active pi-sense-agent && echo "Agent started on boot "
 ```
 
 ### Screenshots (save as)
@@ -126,6 +126,6 @@ systemctl is-active pi-sense-agent && echo "Agent started on boot ✅"
 
 ## Notes
 
-- Keep Node-RED credential files out of git (see `.gitignore`).  
-- For production, enable MQTT TLS/credentials and restrict Node-RED editor access.  
-- Place all screenshots in `docs/images/` using the filenames shown above.
+- i kept Node-RED credential files out of git (see `.gitignore`).  
+- For production, I will enable MQTT TLS/credentials and restrict Node-RED editor access.  
+- I placed all screenshots in `docs/images/` using the filenames shown above.
