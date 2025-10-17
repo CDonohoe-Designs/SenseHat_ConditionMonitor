@@ -3,12 +3,6 @@
 This document captures a full end-to-end test of my Raspberry Pi + Sense HAT edge node.  
 Each step shows the command(s) to run and a **screenshot link** pointing to files under `docs/images/`.
 
-> **Tips**
-> - Keep screenshots 16:9 (~1920×1080).
-> - Use terminal font 16–18pt.
-> - Redact any secrets.
-> - Replace `<pi-ip>` with your device IP.
-> - Save images using the suggested filenames so the links render on GitHub.
 
 [← Back to README](README.md)
 
@@ -96,8 +90,8 @@ http://<pi-ip>:1880/ui
 ## 5) Hardware
 
 ### BoM
-Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
-SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick. and 5 V USB Power Supply. Comms over Headless
+--Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
+--SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick. and 5 V USB Power Supply. Comms over Headless
 
 **docs/images/05c_hardware_action.jpg**  
 ![5c — Hardware Action](docs/images/05c_hardware_action.jpg)
