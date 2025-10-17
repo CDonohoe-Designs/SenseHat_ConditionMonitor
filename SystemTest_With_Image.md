@@ -127,25 +127,6 @@ systemctl is-active pi-sense-agent && echo "Agent started on boot ✅"
 
 ---
 
-## 7) QoS1 + Retained — Show the Difference
-
-### Commands
-```bash
-# retained arrives immediately
-mosquitto_sub -h "$MQTT_HOST" -p "$MQTT_PORT" -t 'spBv1.0/sensehat/DDATA/pi-edge' -v | head -n 1
-
-# ignore retained (live only)
-mosquitto_sub -h "$MQTT_HOST" -p "$MQTT_PORT" -t 'spBv1.0/sensehat/DDATA/pi-edge' -R -v | head -n 2
-```
-
-### Screenshots (save as)
-**docs/images/08a_retained_on_connect.png**  
-![8a — Retained On Connect](docs/images/08a_retained_on_connect.png)
-
-**docs/images/08b_ignore_retained_R.png**  
-![8b — Live Only (-R)](docs/images/08b_ignore_retained_R.png)
-
----
 
 ## Notes
 
