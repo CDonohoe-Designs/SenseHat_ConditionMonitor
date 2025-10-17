@@ -90,8 +90,10 @@ http://<pi-ip>:1880/ui
 ## 5) Hardware
 
 ### BoM
---Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
---SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick. and 5 V USB Power Supply. Comms over Headless
+1. Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
+2. SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick.
+3. 5 V USB Power Supply.
+4. Comms over Headless
 
 **docs/images/05c_hardware_action.jpg**  
 ![5c — Hardware Action](docs/images/05c_hardware_action.jpg)
