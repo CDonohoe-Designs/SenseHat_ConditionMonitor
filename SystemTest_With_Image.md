@@ -1,14 +1,8 @@
 # System Test — SenseHAT Condition Monitor (Screenshots & Evidence)
 
-This document captures a full end-to-end smoke test of the Raspberry Pi + Sense HAT edge node.  
+This document captures a full end-to-end test of my Raspberry Pi + Sense HAT edge node.  
 Each step shows the command(s) to run and a **screenshot link** pointing to files under `docs/images/`.
 
-> **Tips**
-> - Keep screenshots 16:9 (~1920×1080).
-> - Use terminal font 16–18pt.
-> - Redact any secrets.
-> - Replace `<pi-ip>` with your device IP.
-> - Save images using the suggested filenames so the links render on GitHub.
 
 [← Back to README](README.md)
 
@@ -96,8 +90,10 @@ http://<pi-ip>:1880/ui
 ## 5) Hardware
 
 ### BoM
-Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
-SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick. and 5 V USB Power Supply. Comms over Headless
+1. Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
+2. SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick.
+3. 5 V USB Power Supply.
+4. Comms over Headless
 
 **docs/images/05c_hardware_action.jpg**  
 ![5c — Hardware Action](docs/images/05c_hardware_action.jpg)
@@ -109,13 +105,13 @@ SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED
 ```bash
 # Auto-restart on crash?
 sudo pkill -f 'edge/agent.py' ; sleep 4
-systemctl is-active pi-sense-agent && echo "Agent auto-restarted ✅"
+systemctl is-active pi-sense-agent && echo "Agent auto-restarted "
 journalctl -u pi-sense-agent -n 15 --no-pager
 
 # Survives reboot?
 sudo reboot
 # after login:
-systemctl is-active pi-sense-agent && echo "Agent started on boot ✅"
+systemctl is-active pi-sense-agent && echo "Agent started on boot "
 ```
 
 ### Screenshots (save as)
@@ -127,49 +123,9 @@ systemctl is-active pi-sense-agent && echo "Agent started on boot ✅"
 
 ---
 
-## 7) Common Fixes — Quick Triage
-
-### Commands (pick what applies)
-```bash
-journalctl -u pi-sense-agent -n 50 --no-pager
-sudo nano /etc/pi-sense-agent/agent.env
-systemctl status nodered --no-pager
-```
-
-### Screenshots (save as)
-**docs/images/07a_journal_logs.png**  
-![7a — Agent Logs](docs/images/07a_journal_logs.png)
-
-**docs/images/07b_agent_env.png**  
-![7b — Env File](docs/images/07b_agent_env.png)
-
-**docs/images/07c_nodered_status.png**  
-![7c — Node-RED Running](docs/images/07c_nodered_status.png)
-
----
-
-## 8) QoS1 + Retained — Show the Difference
-
-### Commands
-```bash
-# retained arrives immediately
-mosquitto_sub -h "$MQTT_HOST" -p "$MQTT_PORT" -t 'spBv1.0/sensehat/DDATA/pi-edge' -v | head -n 1
-
-# ignore retained (live only)
-mosquitto_sub -h "$MQTT_HOST" -p "$MQTT_PORT" -t 'spBv1.0/sensehat/DDATA/pi-edge' -R -v | head -n 2
-```
-
-### Screenshots (save as)
-**docs/images/08a_retained_on_connect.png**  
-![8a — Retained On Connect](docs/images/08a_retained_on_connect.png)
-
-**docs/images/08b_ignore_retained_R.png**  
-![8b — Live Only (-R)](docs/images/08b_ignore_retained_R.png)
-
----
 
 ## Notes
 
-- Keep Node-RED credential files out of git (see `.gitignore`).  
-- For production, enable MQTT TLS/credentials and restrict Node-RED editor access.  
-- Place all screenshots in `docs/images/` using the filenames shown above.
+- i kept Node-RED credential files out of git (see `.gitignore`).  
+- For production, I will enable MQTT TLS/credentials and restrict Node-RED editor access.  
+- I placed all screenshots in `docs/images/` using the filenames shown above.
