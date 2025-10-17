@@ -131,8 +131,8 @@ sudo systemctl status sensehat-modbus --no-pager
 ```
 
 ### Screenshot (save as)  
-**docs/images/systemtest/20251017/01_services_status.png**  
-![1 — Services Active](docs/images/systemtest/20251017/01_services_status.png)
+**docs/images/07_services_status.png**  
+![1 — Services Active](docs/images/07_services_status.png)
 
 ---
 
@@ -150,8 +150,8 @@ PY
 ```
 
 ### Screenshot (save as)  
-**docs/images/systemtest/20251017/05_modbus_reads.png**  
-![5 — Modbus Reads (Env + Sys)](docs/images/systemtest/20251017/05_modbus_reads.png)
+**docs/images/08_modbus_reads.png**  
+![5 — Modbus Reads (Env + Sys)](docs/images/08_modbus_reads.png)
 
 ### Notes
 - Float32 (2 regs each), **Big-Endian** word & byte.  
