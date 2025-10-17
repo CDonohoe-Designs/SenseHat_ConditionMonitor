@@ -1,6 +1,6 @@
 # System Test — SenseHAT Condition Monitor (Screenshots & Evidence)
 
-This document captures a full end-to-end smoke test of the Raspberry Pi + Sense HAT edge node.  
+This document captures a full end-to-end test of my Raspberry Pi + Sense HAT edge node.  
 Each step shows the command(s) to run and a **screenshot link** pointing to files under `docs/images/`.
 
 > **Tips**
