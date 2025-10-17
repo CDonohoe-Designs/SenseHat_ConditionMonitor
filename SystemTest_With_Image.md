@@ -93,20 +93,13 @@ http://<pi-ip>:1880/ui
 
 ---
 
-## 5) Sensor Sanity — Before / After
+## 5) Hardware
 
-### Action
-Briefly breathe near the HAT (humidity spike), touch/cover (temp nudge), or tilt (accel change).
+### BoM
+Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPDDR2, VideoCore IV.
+SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick. and 5 V USB Power Supply. Comms over Headless
 
-### Screenshots (save as)
-**docs/images/05a_sanity_before.png**  
-![5a — Sensor Sanity (Before)](docs/images/05a_sanity_before.png)
-
-**docs/images/05b_sanity_after.png**  
-![5b — Sensor Sanity (After)](docs/images/05b_sanity_after.png)
-
-*(optional hardware photo)* **docs/images/05c_hardware_action.jpg**  
-*(optional)* ![5c — Hardware Action](docs/images/05c_hardware_action.jpg)
+**docs/images/05c_hardware_action.jpg**  
 
 ---
 
