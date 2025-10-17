@@ -122,6 +122,41 @@ systemctl is-active pi-sense-agent && echo "Agent started on boot "
 ![6b — After Reboot](docs/images/06b_reboot_active.png)
 
 ---
+## 7) Services Up — systemd Status (2025-10-17)
+
+### Commands
+```bash
+sudo systemctl status pi-sense-agent --no-pager
+sudo systemctl status sensehat-modbus --no-pager
+```
+
+### Screenshot (save as)  
+**docs/images/07_services_status.png**  
+![1 — Services Active](docs/images/07_services_status.png)
+
+---
+
+## 8) Modbus Reads (Env + Sys) — IMU disabled profile (2025-10-17)
+
+### Command
+```bash
+python3 - <<'PY'
+from pymodbus.client import ModbusTcpClient; import struct
+def f32(c,a): rr=c.read_holding_registers(a,2,slave=1); raw=(rr.registers[0]<<16)|rr.registers[1]; return struct.unpack('>f',raw.to_bytes(4,'big'))[0]
+c=ModbusTcpClient('127.0.0.1',port=1502); c.connect()
+print("temp",f32(c,0),"hum",f32(c,2),"pres",f32(c,4),"cpu",f32(c,6),"mem",f32(c,8))
+c.close()
+PY
+```
+
+### Screenshot (save as)  
+**docs/images/08_modbus_reads.png**  
+![5 — Modbus Reads (Env + Sys)](docs/images/08_modbus_reads.png)
+
+### Notes
+- Float32 (2 regs each), **Big-Endian** word & byte.  
+- Registers: **40001–40002** Temp °C • **40003–40004** Humidity %RH • **40005–40006** Pressure hPa • **40007–40008** CPU % • **40009–40010** RAM %.  
+- Coil **00001 = 1** when fresh (≤ `STALE_SEC`), DI **10001 = 1** when stale.
 
 
 ## Notes
