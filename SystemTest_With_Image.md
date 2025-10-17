@@ -100,7 +100,7 @@ Raspberry Pi 3 Model B: Broadcom BCM2837 quad-core Cortex-A53 ~1.2 GHz, 1 GB LPD
 SenseHat V1.0: LSM9DS1 IMU, LPS25H barometer, HTS221 humidity/temp, 8×8 RGB LED matrix, 5-way joystick. and 5 V USB Power Supply. Comms over Headless
 
 **docs/images/05c_hardware_action.jpg**  
-![0 — Prep (IP & Broker)](docs/images/05c_hardware_action.)
+![5c — Hardware Action](docs/images/05c_hardware_action.jpg)
 ---
 
 ## 6) Resilience — Crash & Reboot
